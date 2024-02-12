@@ -1,0 +1,9 @@
+name: Lobby-System
+version: '${project.version}'
+main: plugin.lobbysystem.Main
+api-version: '1.19'
+authors: [Ditomax]
+commands:
+  builder:
+  spawn:
+  setspawn:
