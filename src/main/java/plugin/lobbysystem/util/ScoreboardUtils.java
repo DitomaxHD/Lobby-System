@@ -38,8 +38,7 @@ public class ScoreboardUtils implements PluginMessageListener{
         }
 
         objective.setDisplaySlot(DisplaySlot.SIDEBAR);
-        objective.setDisplayName("§b§o■ §8┃ §c§lFoxigames.de §8┃ §b§o■");
-        objective.setAutoUpdateDisplay();
+        objective.setDisplayName("§b§o■ §8┃ §6§lFoxigames.de §8┃ §b§o■");
 
 
         objective.getScore("§7----------------").setScore(12);
@@ -55,8 +54,8 @@ public class ScoreboardUtils implements PluginMessageListener{
         }
 
         objective.getScore("§b").setScore(6);
-        objective.getScore("§6§lPlayers").setScore(5);
-        objective.getScore("    §7" + Bukkit.getServer().getOnlinePlayers().size() + " / §c" + Bukkit.getServer().getMaxPlayers()).setScore(4);
+        objective.getScore("§6§lCoins").setScore(5);
+        objective.getScore("    §7" + Coins.getCoins(p) + "$").setScore(4);
         objective.getScore("§c").setScore(3);
         objective.getScore("§6§lServer").setScore(2);
 

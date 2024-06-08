@@ -7,9 +7,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
-import plugin.lobbysystem.commands.BuilderCommand;
-import plugin.lobbysystem.commands.SetSpawnCommand;
-import plugin.lobbysystem.commands.SpawnCommand;
+import plugin.lobbysystem.commands.*;
 import plugin.lobbysystem.util.Events;
 import plugin.lobbysystem.util.ScoreboardUtils;
 
@@ -46,7 +44,7 @@ public final class Main extends JavaPlugin {
                     p.setScoreboard(ScoreboardUtils.getScoreboard(p));
                 }
             }
-        }.runTaskTimer(this, 20L*5, 20L*5);
+        }.runTaskTimer(this, 20L*5, 20L);
     }
 
     @Override

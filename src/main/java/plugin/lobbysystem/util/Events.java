@@ -1,6 +1,10 @@
 package plugin.lobbysystem.util;
 
+import com.google.common.io.ByteArrayDataInput;
+import com.google.common.io.ByteArrayDataOutput;
+import com.google.common.io.ByteStreams;
 import org.bukkit.ChatColor;
+import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -13,10 +17,14 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryMoveItemEvent;
 import org.bukkit.event.player.*;
 import org.bukkit.event.weather.WeatherChangeEvent;
+import org.bukkit.plugin.messaging.PluginMessageListener;
+import org.bukkit.scheduler.BukkitRunnable;
+import org.jetbrains.annotations.NotNull;
 import plugin.lobbysystem.Main;
 
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
+import java.util.ArrayList;
 
 public class Events implements Listener {
 
@@ -25,9 +33,16 @@ public class Events implements Listener {
         Player p = e.getPlayer();
 
         e.setJoinMessage(null);
+
+        if (Main.instance.getConfig().getString("builder." + p.getUniqueId().toString()) != null) {
+            Main.instance.getConfig().set("builder." + p.getUniqueId().toString(), null);
+            Main.instance.saveConfig();
+        }
+
         p.setScoreboard(ScoreboardUtils.getScoreboard(p));
         p.getInventory().clear();
         p.getInventory().setItem(4, ServerSelector.getSelector());
+        p.setGameMode(GameMode.SURVIVAL);
 
         if (Main.instance.getConfig().getLocation("spawn") != null) {
             p.teleport(Main.instance.getConfig().getLocation("spawn"));
@@ -37,7 +52,7 @@ public class Events implements Listener {
     }
 
     @EventHandler
-    public void PlayerLeaveEvent(PlayerQuitEvent e) {
+    public void PlayerQuitEvent(PlayerQuitEvent e) {
         Player p = e.getPlayer();
 
         e.setQuitMessage(null);
@@ -101,12 +116,22 @@ public class Events implements Listener {
 
     @EventHandler
     public void PlayerInteractEvent(PlayerInteractEvent e) {
-        if (e.getItem() == null) return;
+        Main main = Main.instance;
+        String UUID = e.getPlayer().getUniqueId().toString();
 
         if (e.getAction().isRightClick()) {
+            if (e.getItem() == null) {
+                e.setCancelled(true);
+                return;
+            }
+
             if (e.getItem().equals(ServerSelector.getSelector())) {
                 e.getPlayer().openInventory(ServerSelector.getInv());
             }
+        }
+
+        if (main.getConfig().getString("builder." + UUID) == null) {
+            e.setCancelled(true);
         }
     }
 
@@ -126,6 +151,14 @@ public class Events implements Listener {
             if (e.getCurrentItem().getType().equals(Material.WOODEN_AXE)) {
                 sendPlayerToServer(p, "gungame");
             }
+        }
+    }
+
+    @EventHandler
+    public void PlayerMoveEvent(PlayerMoveEvent e) {
+        Player player = e.getPlayer();
+        if (player.getY() <= 0) {
+            player.teleport(player.getWorld().getSpawnLocation());
         }
     }
 

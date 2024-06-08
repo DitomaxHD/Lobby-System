@@ -1,5 +1,6 @@
 package plugin.lobbysystem.commands;
 
+import org.bukkit.GameMode;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -22,11 +23,13 @@ public class BuilderCommand implements CommandExecutor {
                 main.getConfig().set("builder." + UUID, "");
                 main.saveConfig();
                 p.getInventory().clear();
+                p.setGameMode(GameMode.CREATIVE);
                 p.sendMessage(Main.prefix + "§aYou are now in the builder-mode!");
             }else {
                 main.getConfig().set("builder." + UUID, null);
                 main.saveConfig();
                 p.getInventory().setItem(4, ServerSelector.getSelector());
+                p.setGameMode(GameMode.SURVIVAL);
                 p.sendMessage(Main.prefix + "§aYou are not longer in the builder-mode!");
             }
             return true;
